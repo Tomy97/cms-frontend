@@ -1,24 +1,25 @@
-import React from "react"
+import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
 import App from "./App"
 import { store } from "./app/store"
-import { PrimeReactProvider } from 'primereact/api';
-import "./index.css"
-
+import { PrimeReactProvider } from "primereact/api"
+import "primereact/resources/themes/lara-light-cyan/theme.css"
+import "primeicons/primeicons.css"
+import 'primeflex/primeflex.css'
+import './index.css'
 const container = document.getElementById("root")
 
 if (container) {
   const root = createRoot(container)
-
   root.render(
-    <React.StrictMode>
+    <StrictMode>
       <Provider store={store}>
         <PrimeReactProvider>
           <App />
         </PrimeReactProvider>
       </Provider>
-    </React.StrictMode>,
+    </StrictMode>
   )
 } else {
   throw new Error(
