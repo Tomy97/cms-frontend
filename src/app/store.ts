@@ -1,8 +1,8 @@
 import type { Action, ThunkAction } from "@reduxjs/toolkit"
 import { combineSlices, configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
-import { AuthService } from '../redux/services/auth.service'
-import { authSlice } from '../redux/slices/auth.slices'
+import { AuthService } from '../auth/redux/services/auth.service'
+import { authSlice } from '../auth/redux/slices/auth.slices'
 // `combineSlices` automatically combines the reducers using
 // their `reducerPath`s, therefore we no longer need to call `combineReducers`.
 const rootReducer = combineSlices({

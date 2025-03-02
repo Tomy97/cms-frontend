@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router-dom"
-import { HomeViews, LoginViews, RegisterView } from "../views/index"
+import { HomeViews } from "../views/HomeViews"
+import { LoginViews } from '../auth/views/LoginViews'
+import { RegisterView } from '../auth/views/RegisterView'
 import { AuthLayout } from "../layouts/AuthLayout"
 import { MainLayout } from "../layouts/MainLayout"
 import { RoutesEnum } from "../utils/enums/RoutesEnum"

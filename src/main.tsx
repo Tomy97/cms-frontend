@@ -3,11 +3,8 @@ import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
 import App from "./App"
 import { store } from "./app/store"
-import { PrimeReactProvider } from "primereact/api"
-import "primereact/resources/themes/lara-light-cyan/theme.css"
-import "primeicons/primeicons.css"
-import 'primeflex/primeflex.css'
-import './index.css'
+import { ThemeProvider } from "@mui/material"
+import { theme } from './utils/theme'
 const container = document.getElementById("root")
 
 if (container) {
@@ -15,9 +12,9 @@ if (container) {
   root.render(
     <StrictMode>
       <Provider store={store}>
-        <PrimeReactProvider>
+        <ThemeProvider theme={theme}>
           <App />
-        </PrimeReactProvider>
+        </ThemeProvider>
       </Provider>
     </StrictMode>
   )
