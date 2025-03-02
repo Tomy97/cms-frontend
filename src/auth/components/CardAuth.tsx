@@ -1,97 +1,104 @@
-import { Card, CardContent, CardActions, Grid2 as Grid, TextField, Typography, Button } from '@mui/material'
-import { useState, type FC } from 'react'
-import { ComponentVariantEnum } from '../../utils/enums/ComponentVariantEnum'
-
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Grid2 as Grid,
+  TextField,
+  Typography,
+  Button,
+} from "@mui/material"
+import { type FC } from "react"
+import { ComponentVariantEnum } from "../../utils/enums/ComponentVariantEnum"
+import { useFormik } from "formik"
+import * as Yup from "yup"
 
 export interface IForm {
   email: string
-  password: string 
+  password: string
 }
 type CardAuthProps = {
   title: string
   subTitle?: string
+  buttonText?: string
   onSubmit: (val: IForm) => void
 }
 
-export const CardAuth: FC<CardAuthProps> = ({ title, subTitle, onSubmit }) => {
+const validateErrorMessageSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Formato no valido")
+    .required("el campo email es requerido"),
+  password: Yup.string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .required("El campo contraseña es requerido"),
+})
 
-  const [formValue, setFormValue] = useState<IForm>({
-    email: '',
-    password: ''
+export const CardAuth: FC<CardAuthProps> = ({ title, subTitle, buttonText = 'Enviar', onSubmit }) => {
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: validateErrorMessageSchema,
+    onSubmit: val => {
+      onSubmit(val)
+    },
   })
-  const [formValidations, setFormValidations] = useState<{
-    isEmailValid: boolean
-    emailHelperText: string
-    isPasswordValid: boolean
-    passwordHelperText: string
-  }>({
-    isEmailValid: false,
-    emailHelperText: 'hola, soy el texto de text',
-    isPasswordValid: false,
-    passwordHelperText: '',
-  })
-
-  const handleSubmit = (val: IForm) => {
-    
-    if (!val.email && !val.password) {
-      return setFormValidations({
-        isEmailValid: true,
-        emailHelperText: 'El campo email es requerido',
-        isPasswordValid: true,
-        passwordHelperText: 'El campo password es requerido'
-      })
-    }
-
-  }
   return (
-    <Card sx={{ maxHeight: "25rem" }}>
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {title}
-        </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {subTitle}
-        </Typography>
-        <Grid container my={2}>
-          <Grid size={12} mb={3}>
-            <TextField
-              label="Email"
-              type="email"
-              required
-              variant={ComponentVariantEnum.STANDARD}
-              fullWidth
-              onChange={({ target: { value } }) =>
-                setFormValue({ ...formValue, email: value })
-              }
-              error={formValidations.isEmailValid}
-              helperText={
-                formValidations.isEmailValid && formValidations.emailHelperText
-              }
-            />
+    <Card sx={{ width: "30.5rem", maxHeight: "25rem" }}>
+      <form onSubmit={formik.handleSubmit}>
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {title}
+          </Typography>
+          {subTitle && (
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              {subTitle}
+            </Typography>
+          )}
+          <Grid container my={2}>
+            <Grid size={12} mb={3}>
+              <TextField
+                label="Email"
+                id="email"
+                name="email"
+                variant={ComponentVariantEnum.STANDARD}
+                fullWidth
+                value={formik.values.email}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                label="Contraseña"
+                type="password"
+                id="password"
+                name="password"
+                fullWidth
+                variant={ComponentVariantEnum.STANDARD}
+                value={formik.values.password}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+                helperText={formik.touched.password && formik.errors.password}
+              />
+            </Grid>
           </Grid>
-          <Grid size={12}>
-            <TextField
-              label="Password"
-              type="password"
-              fullWidth
-              required
-              variant={ComponentVariantEnum.STANDARD}
-              onChange={({ target: { value } }) =>
-                setFormValue({ ...formValue, password: value })
-              }
-            />
-          </Grid>
-        </Grid>
-      </CardContent>
-      <CardActions>
-        <Button
-          fullWidth
-          variant={ComponentVariantEnum.CONTAINED}
-          onClick={() => handleSubmit(formValue)}
-        >
-          Enviar
-        </Button>
-      </CardActions>
+        </CardContent>
+        <CardActions>
+          <Button
+            fullWidth
+            variant={ComponentVariantEnum.CONTAINED}
+            type="submit"
+          >
+            {buttonText}
+          </Button>
+        </CardActions>
+      </form>
     </Card>
   )
 }

@@ -5,6 +5,7 @@ import App from "./App"
 import { store } from "./app/store"
 import { ThemeProvider } from "@mui/material"
 import { theme } from './utils/theme'
+import './index.css'
 const container = document.getElementById("root")
 
 if (container) {

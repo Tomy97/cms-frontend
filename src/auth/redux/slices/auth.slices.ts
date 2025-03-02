@@ -1,23 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 interface AuthState {
   email: string
+  loginError: string | null
 }
 
 const initialState: AuthState = {
-  email: ''
+  email: '',
+  loginError: null
 }
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (state: AuthState, { payload }) => {
+    setLogin: ({ email }: AuthState, { payload }) => {
       if (!payload) return
       const decoded: { email: string } = jwtDecode(payload)
-      state.email = decoded.email
+      email = decoded.email
+    },
+    setLoginError({ loginError }: AuthState, { payload }: PayloadAction<string>) {
+      loginError = payload
     }
   }
 })
 
-export const { login } = authSlice.actions
+export const { setLogin, setLoginError } = authSlice.actions
