@@ -4,10 +4,6 @@
 
 <template>
   <span>
-    Categorias
+    orders
   </span>
 </template>
-
-<style scoped>
-
-</style>

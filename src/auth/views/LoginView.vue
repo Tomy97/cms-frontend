@@ -2,10 +2,9 @@
 import {reactive} from "vue";
 import {useRouter} from "vue-router";
 import {Field, useForm} from 'vee-validate'
-import {useMutation} from '@tanstack/vue-query'
 import {useAuthStore} from "../store/auth.store.ts";
-import {type AuthPayload, useAuthService} from "../services/auth.service.ts";
-import {RoutesNamesEnum} from "../../enums/routesNames.enum.ts";
+import {type AuthPayload} from "../services/auth.service.ts";
+import {RoutesNamesEnum} from "@/enums/RoutesNames.enum.ts";
 
 import Card from "primevue/card";
 import Button from "primevue/button";
@@ -18,17 +17,13 @@ const form = reactive<AuthPayload>({
 })
 const router = useRouter();
 const authStore = useAuthStore();
-const {mutateAsync} = useMutation({
-  mutationFn: (payload: AuthPayload) => useAuthService(payload),
-})
 const {handleSubmit} = useForm({initialValues: form})
 
 const onSubmit = handleSubmit(async (values: AuthPayload) => {
   try {
-    const data = await mutateAsync(values)
-    if (data) {
-      authStore.login(data.access_token)
-      router.push({name: RoutesNamesEnum.HOME})
+    await authStore.login(values)
+    if (authStore.isLogged) {
+      await router.push({name: RoutesNamesEnum.HOME})
     }
   } catch (err) {
     throw err;
